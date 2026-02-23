@@ -17,7 +17,7 @@ Oleh karena itu, **NodeAI** hadir sebagai _one-stop solution_ di mana AI tidak h
 
 ---
 
-## 🛠 Tech Stack (Teknologi yang Digunakan)
+## Tech Stack (Teknologi yang Digunakan)
 
 Aplikasi ini dibangun menggunakan arsitektur monorepo / multi-apps modern (Frontend & Backend terpisah namun terintegrasi erat), dengan _tech stack_ handal:
 
