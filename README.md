@@ -1,10 +1,10 @@
-# 🚀 NodeAI
+# NodeAI
 
 **NodeAI** adalah aplikasi website SaaS (_Software as a Service_) inovatif yang dirancang khusus untuk mempermudah siapa pun dalam memvisualisasikan ide, alur kerja, rute belajar, dan arsitektur sistem secara instan melalui kekuatan AI. Cukup ketik apa yang ingin Anda rancang, dan biarkan AI mengubahnya menjadi _roadmap_ atau diagram nyata yang bisa langsung diedit di atas _canvas_ interaktif!
 
 ---
 
-## 💡 Latar Belakang & Masalah (Problem Statement)
+## Latar Belakang & Masalah (Problem Statement)
 
 Ide aplikasi ini muncul dari pemecahan masalah nyata yang sering ditemui dalam proses pembelajaran maupun dokumentasi profesional:
 
@@ -21,35 +21,34 @@ Oleh karena itu, **NodeAI** hadir sebagai _one-stop solution_ di mana AI tidak h
 
 Aplikasi ini dibangun menggunakan arsitektur monorepo / multi-apps modern (Frontend & Backend terpisah namun terintegrasi erat), dengan _tech stack_ handal:
 
-### 🌐 Frontend (Proyek Utama)
+### Frontend (Proyek Utama)
 
 - **React.js + Vite:** Ekosistem dasar yang menjamin performa, waktu _build_ yang cepat (HMR), serta pengalaman _Single Page Application_ (SPA) yang sangat mulus.
 - **@xyflow/react (React Flow):** _Library_ spesifik untuk menangani _canvas_, _nodes_, _edges_ (garis penghubung), algoritma _auto-layout_, dan interaktivitas tingkat tinggi di atas kanvas diagram.
 - **Vanilla CSS:** Memanfaatkan CSS murni modern dengan CSS Variables sebagai sistem desain terpusat (_Design System Token_) - memprioritaskan estetika premium, elegan, _airy_, _glassmorphism_, dan _soft tech_.
 - **Lucide React:** Set ikon minimalis nan estetis yang mendukung _interface_ aplikasi.
 
-### ⚙️ Backend & AI Service
+### Backend & AI Service
 
 - **Express.js:** _Framework_ Node.js yang ringan dan efisien untuk menyajikan API ke sisi klien (menerima _prompt_ pengguna, memproses logika, dan menyimpannya).
 - **Vercel AI SDK:** _Library_ andalan yang digunakan untuk menangani koneksi _(streaming & response)_ dari _Large Language Models_ (LLM) seperti Google Gemini / GPT, sehingga AI mampu menghasilkan struktur JSON diagram (node & koneksi garis) yang presisi sesuai permintaan user.
 
-### 🗄️ Database & Authentication Server
+### Database & Authentication Server
 
-- **Supabase:** Berperan ganda sebagai penyedia otentikasi aman _(Login, Register, Session)_ sekaligus Backend as a Service.
 - **PostgreSQL / Drizzle ORM:** Skema basis data rasional (_relational_) modern yang disupervisi dengan Drizzle untuk kehandalan _query_ dan simpan-muat data secara cepat.
 - **Better Auth:** Layanan otentikasi tambahan (alternatif/transisi) dalam ekosistem sistem SaaS terpadu.
 
 ---
 
-## ✨ Fitur MVP (Minimum Viable Product) yang Disuguhkan
+## Fitur MVP (Minimum Viable Product) yang Disuguhkan
 
 Sebagai MVP yang langsung _ready_ digunakan, NodeAI menyuguhkan fitur-fitur "killer" berikut:
 
-### 1. 🤖 AI Chat to Canvas (AI Roadmap Generator)
+### 1. AI Chat to Canvas (AI Roadmap Generator)
 
 Fitur utamanya! Pengguna berinteraksi dengan asisten AI yang berada di sebelah kanan kanvas (_Side Panel AI_). Cukup perintahkan _prompt_ seperti _"Buatkan saya roadmap belajar Next.js dari awal"_, AI akan men-_generate_ kumpulan node langkah demi langkah dan otomatis meletakkannya dengan rapi di tengah _canvas_ lengkap beserta deskripsi garisnya.
 
-### 2. 🖱️ Drag, Drop, Custom Canvas Builder
+### 2. Drag, Drop, Custom Canvas Builder
 
 Pengguna memiliki kontrol mutlak terhadap diagram yang dihasilkan AI.
 
@@ -59,14 +58,14 @@ Pengguna memiliki kontrol mutlak terhadap diagram yang dihasilkan AI.
 - Fitur _Auto-Layout_ membenarkan node yang berantakan menjadi struktur hierarki atau alur otomatis yang sedap dipandang.
 - Memberi _label_ catatan di atas garis penghubung secara _inline_.
 
-### 3. ✨ Auto-Save & Project Management
+### 3. Auto-Save & Project Management
 
 Setiap perubahan sekecil apa pun di atas _canvas_ (menggeser node, menambah teks, atau interaksi AI) akan otomatis terjaga melalui fitur _Real-time Auto-save_ dan disambungkan ke _Database_ (Supabase). Semua riwayat _roadmap_/proyek tersimpan aman dan terkelola rapi pada Dashboard akun pribadi _user_.
 
-### 4. 🖼️ Ekspor Visual
+### 4. Ekspor Visual
 
 Apakah desain diagram _flow_ sudah jadi dan dirasa mantap? Pengguna cukup melakukan sekali klik menggunakan menu Ekspor agar bisa langsung diunduh _(download)_ dalam format populer seperti **PNG, JPG, dan SVG** - bahkan mendukung opsi latar belakang _Transparan_ untuk ditempel di presentasi/pitch deck!
 
-### 5. 🔐 Autentikasi Mudah dan Interface yang Memanjakan Mata
+### 5. Autentikasi Mudah dan Interface yang Memanjakan Mata
 
 Sistem Login & Register dirakit kuat namun dengan _visual vibe_ yang cantik _(Soft Premium Aesthetic - perpaduan warna violet, gradasi kaca (ice), glow shadow minimalis)_. Termasuk sistem validasi _error_ yang sangat intuitif melalui _toast notification pop-up_.
