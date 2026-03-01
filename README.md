@@ -35,8 +35,9 @@ Aplikasi ini dibangun menggunakan arsitektur monorepo / multi-apps modern (Front
 
 ### Database & Authentication Server
 
-- **PostgreSQL / Drizzle ORM:** Skema basis data rasional (_relational_) modern yang disupervisi dengan Drizzle untuk kehandalan _query_ dan simpan-muat data secara cepat.
-- **Better Auth:** Layanan otentikasi tambahan (alternatif/transisi) dalam ekosistem sistem SaaS terpadu.
+- **PostgreSQL:** Basis data relasional (relational) modern untuk menyimpan seluruh state secara persisten.
+- **Better Auth:** Layanan otentikasi utama dan manajemen sesi pengguna dalam ekosistem sistem SaaS terpadu.
+- **Drizzle ORM:** TypeScript ORM andalan untuk kehandalan query dan interaksi data yang cepat serta aman.
 
 ---
 
@@ -60,7 +61,7 @@ Pengguna memiliki kontrol mutlak terhadap diagram yang dihasilkan AI.
 
 ### 3. Auto-Save & Project Management
 
-Setiap perubahan sekecil apa pun di atas _canvas_ (menggeser node, menambah teks, atau interaksi AI) akan otomatis terjaga melalui fitur _Real-time Auto-save_ dan disambungkan ke _Database_ (Supabase). Semua riwayat _roadmap_/proyek tersimpan aman dan terkelola rapi pada Dashboard akun pribadi _user_.
+Setiap perubahan sekecil apa pun di atas _canvas_ (menggeser node, menambah teks, atau interaksi AI) akan otomatis terjaga melalui fitur _Real-time Auto-save_ dan disambungkan ke _Database_. Semua riwayat _roadmap_/proyek tersimpan aman dan terkelola rapi pada Dashboard akun pribadi _user_.
 
 ### 4. Ekspor Visual
 
@@ -69,3 +70,5 @@ Apakah desain diagram _flow_ sudah jadi dan dirasa mantap? Pengguna cukup melaku
 ### 5. Autentikasi Mudah dan Interface yang Memanjakan Mata
 
 Sistem Login & Register dirakit kuat namun dengan _visual vibe_ yang cantik _(Soft Premium Aesthetic - perpaduan warna violet, gradasi kaca (ice), glow shadow minimalis)_. Termasuk sistem validasi _error_ yang sangat intuitif melalui _toast notification pop-up_.
+
+---

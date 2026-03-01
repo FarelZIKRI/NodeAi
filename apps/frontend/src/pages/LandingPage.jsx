@@ -4,6 +4,7 @@ import {
   Sparkles, Zap, GitBranch, MessageSquare, Expand,
   ArrowRight, ChevronRight, Workflow
 } from 'lucide-react';
+import HeroFlow from '../components/HeroFlow';
 
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
@@ -33,46 +34,49 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="hero-section">
+      <section className="hero-section" style={{ overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+          <HeroFlow />
+          {/* Overlay to blur and fade the left side behind the text only */}
+          <div style={{ 
+            position: 'absolute', 
+            top: 0, bottom: 0, left: 0, width: '50%',
+            background: 'linear-gradient(90deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 60%, transparent 100%)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            WebkitMaskImage: 'linear-gradient(90deg, black 0%, black 60%, transparent 100%)',
+            maskImage: 'linear-gradient(90deg, black 0%, black 60%, transparent 100%)',
+            pointerEvents: 'none',
+            zIndex: 1
+          }} />
+        </div>
+        
         <div className="hero-glow hero-glow-1" />
         <div className="hero-glow hero-glow-2" />
 
-        <div className="hero-badge">
-          <span className="hero-badge-dot" />
-          AI-Powered Diagram Builder
-        </div>
+        <div className="hero-container" style={{ pointerEvents: 'none' }}>
+          <div className="hero-content">
+            <h1 className="hero-title" style={{ pointerEvents: 'auto' }}>
+              Visualisasikan ide Anda dengan <span className="hero-title-highlight" style={{ color: 'var(--accent-purple)' }}>NodeAI</span>
+            </h1>
 
-        <h1 className="hero-title">
-          Buat <span className="hero-title-gradient">Roadmap & Diagram</span> dalam Hitungan Detik
-        </h1>
+            <p className="hero-subtitle" style={{ pointerEvents: 'auto' }}>
+              Platform interaktif berbasis AI untuk membuat roadmap belajar dan diagram alur
+              secara instan. Tidak perlu desain manual — cukup ketik topik.
+            </p>
 
-        <p className="hero-subtitle">
-          Visualisasikan ide dan rencana belajar Anda secara otomatis dengan kekuatan AI.
-          Tidak perlu desain manual — cukup ketik topik, dan NodeAI yang mengerjakannya.
-        </p>
-
-        <div className="hero-actions">
-          <Link to="/register" className="btn btn-primary btn-lg">
-            <Sparkles size={18} />
-            Coba Sekarang — Gratis
-          </Link>
-          <Link to="/login" className="btn btn-secondary btn-lg">
-            Masuk ke Akun
-          </Link>
-        </div>
-
-        <div className="hero-stats">
-          <div className="hero-stat">
-            <div className="hero-stat-value">∞</div>
-            <div className="hero-stat-label">Diagram Gratis</div>
+            <div className="hero-actions" style={{ pointerEvents: 'auto' }}>
+              <Link to="/register" className="btn btn-primary btn-lg" style={{ borderRadius: '24px' }}>
+                <Zap size={18} /> Mulai Sekarang — Gratis
+              </Link>
+              <Link to="/login" className="btn btn-secondary btn-lg" style={{ borderRadius: '24px' }}>
+                <Sparkles size={18} /> Masuk ke Akun
+              </Link>
+            </div>
           </div>
-          <div className="hero-stat">
-            <div className="hero-stat-value">AI</div>
-            <div className="hero-stat-label">Powered</div>
-          </div>
-          <div className="hero-stat">
-            <div className="hero-stat-value">&lt;10s</div>
-            <div className="hero-stat-label">Generate Time</div>
+          
+          <div className="hero-flow-placeholder">
+            {/* Empty grid space */}
           </div>
         </div>
       </section>
@@ -80,11 +84,11 @@ export default function LandingPage() {
       {/* Features Section */}
       <section className="features-section">
         <div className="section-header">
-          <div className="section-label">Fitur Utama</div>
-          <h2 className="section-title">Semua yang Kamu Butuhkan</h2>
+          <div className="section-label">Kemampuan NodeAI</div>
+          <h2 className="section-title">Satu Platform, Semua Diagram</h2>
           <p className="section-subtitle">
-            Dari pembuatan manual hingga AI otomatis, NodeAI punya semuanya
-            untuk memvisualisasikan ide-idemu.
+            Dari kanvas kosong hingga roadmap terstruktur berkat kecerdasan buatan. 
+            Mewujudkan ide kompleks kini semudah mengetik beberapa kata.
           </p>
         </div>
 
@@ -93,10 +97,9 @@ export default function LandingPage() {
             <div className="feature-icon feature-icon-purple">
               <Sparkles size={24} />
             </div>
-            <h3>AI Roadmap Generator</h3>
+            <h3>Generasi AI Instan</h3>
             <p>
-              Ketik topik & level, lalu AI akan membuat roadmap lengkap
-              dengan nodes dan connections yang langsung siap ditampilkan.
+              Cukup masukan topik dan tingkat kesulitan, AI khusus penataan ruang kami akan menyusun roadmap Node presisi lengkap dengan relasinya secara langsung.
             </p>
           </div>
 
@@ -104,10 +107,9 @@ export default function LandingPage() {
             <div className="feature-icon feature-icon-pink">
               <Expand size={24} />
             </div>
-            <h3>AI Node Expansion</h3>
+            <h3>Ekspansi Edge Terarah</h3>
             <p>
-              Klik satu node, pilih "Expand with AI", dan AI akan
-              menambahkan detail sub-langkah secara otomatis. Killer feature!
+              Klik sembarang Node dan paksa AI untuk mencabangkan konsep tersebut ke dalam rantai pemahaman yang jauh lebih spesifik dan detail!
             </p>
           </div>
 
@@ -115,10 +117,9 @@ export default function LandingPage() {
             <div className="feature-icon feature-icon-cyan">
               <MessageSquare size={24} />
             </div>
-            <h3>Text → Diagram</h3>
+            <h3>Prompts Kontekstual</h3>
             <p>
-              Paste teks alur kerja biasa, dan AI akan mengubahnya
-              menjadi diagram visual yang indah secara instan.
+              Ubah paragraf, silabus bebas, atau prompt catatan panjang menjadi pohon visual hierarkis otomatis tanpa perlu merancang dari nol. 
             </p>
           </div>
 
@@ -126,10 +127,9 @@ export default function LandingPage() {
             <div className="feature-icon feature-icon-blue">
               <GitBranch size={24} />
             </div>
-            <h3>Drag & Drop Canvas</h3>
+            <h3>Kanvas Responsif Tanpa Batas</h3>
             <p>
-              Canvas interaktif berbasis React Flow. Buat, hubungkan,
-              dan atur node dengan mudah menggunakan drag & drop.
+              Kanvas super halus bergaya Node-Based yang dapat di Zoom, Pan, dan Drag secara bebas seperti menggunakan figma—dirancang untuk kenyamanan 60FPS.
             </p>
           </div>
 
@@ -137,10 +137,9 @@ export default function LandingPage() {
             <div className="feature-icon feature-icon-green">
               <Zap size={24} />
             </div>
-            <h3>Real-time Save</h3>
+            <h3>Sinkronisasi Cloud Aktif</h3>
             <p>
-              Semua perubahan tersimpan otomatis. Kembali kapan saja
-              dan lanjutkan pekerjaan dari terakhir kali.
+              Setiap pergeseran, modifikasi, dan penambahan node langsung tersimpan dan direplikasi secara otomatis di ruang penyimpanan aman berbasis Cloud.
             </p>
           </div>
 
@@ -148,32 +147,66 @@ export default function LandingPage() {
             <div className="feature-icon feature-icon-amber">
               <Workflow size={24} />
             </div>
-            <h3>Project Management</h3>
+            <h3>Manajemen Proyek Terpusat</h3>
             <p>
-              Kelola semua proyek diagram di satu tempat. Buat, edit,
-              dan organisasi diagram dengan mudah.
+              Dasbor berfokus produktivitas untuk mengorganisir riwayat puluhan roadmap karir kamu, dan akses satu klik untuk mendistribusikan diagram.
             </p>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="cta-section">
-        <div className="cta-box">
-          <h2>
-            Siap Memvisualisasikan Ide-idemu?
+      {/* Quickstart / Terminal Section */}
+      <section className="terminal-section" style={{ padding: '100px 24px 60px', display: 'flex', justifyContent: 'center' }}>
+        <div style={{
+          background: 'linear-gradient(180deg, #1b0a21 0%, #150917 100%)',
+          borderRadius: '16px',
+          padding: '60px 40px',
+          width: '100%',
+          maxWidth: '1000px',
+          color: 'white',
+          textAlign: 'center',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+        }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '20px', color: '#ff0071' }}>
+            Getting Started with NodeAI
           </h2>
-          <p>
-            Bergabung sekarang dan mulai buat roadmap & diagram pertamamu
-            dengan kekuatan AI.
+          <p style={{ color: '#d1d5db', marginBottom: '40px', fontSize: '1.05rem', lineHeight: 1.6 }}>
+            Make sure you've registered an account. Then you can generate<br />your first roadmap via our AI Prompt:
           </p>
-          <Link to="/register" className="btn btn-primary btn-lg" style={{ position: 'relative' }}>
-            <Sparkles size={18} />
-            Mulai Sekarang
-            <ChevronRight size={18} />
-          </Link>
+          
+          <div style={{
+            background: '#050505',
+            borderRadius: '8px',
+            border: '1px solid rgba(255,255,255,0.05)',
+            margin: '0 auto',
+            maxWidth: '650px',
+            textAlign: 'left',
+            overflow: 'hidden',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+          }}>
+            <div style={{
+              display: 'flex',
+              gap: '8px',
+              padding: '16px 20px',
+            }}>
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff5f56' }} />
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffbd2e' }} />
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#27c93f' }} />
+            </div>
+            <div style={{ padding: '24px 20px 48px', fontFamily: '"JetBrains Mono", monospace', fontSize: '1rem', color: '#ff0071' }}>
+              &gt; Generate Roadmap <span style={{ color: '#e5e7eb' }}>"Cara menjadi Frontend Developer 2026"</span>
+            </div>
+          </div>
+          
+          <div style={{ marginTop: '50px' }}>
+            <Link to="/register" style={{ color: '#e5e7eb', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: '6px', transition: 'color 0.2s' }}>
+              See full Quickstart guide <ArrowRight size={14} />
+            </Link>
+          </div>
         </div>
       </section>
+
+
 
       {/* Footer */}
       <footer className="footer">

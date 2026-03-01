@@ -4,7 +4,7 @@ import { env } from './env.js';
 import * as schema from '../db/schema.js';
 
 /**
- * Koneksi ke Supabase PostgreSQL menggunakan driver postgres.js
+ * Koneksi ke PostgreSQL menggunakan driver postgres.js
  * dan Drizzle ORM. Menggunakan mode koneksi biasa (bukan pooler).
  */
 const client = postgres(env.DATABASE_URL);
