@@ -19,7 +19,9 @@ app.use(cors({
 }));
 
 // Better Auth — mount SEBELUM body parser karena Better Auth handle sendiri
+// Dukung dua path: langsung (/api/auth/*) dan via Netlify Functions (/*api/auth/*)
 app.all('/api/auth/*', toNodeHandler(auth));
+app.all('/*api/auth/*', toNodeHandler(auth));
 
 // Parse JSON body
 app.use(express.json({ limit: '10mb' }));
