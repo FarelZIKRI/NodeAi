@@ -21,6 +21,8 @@ const envSchema = z.object({
   GROQ_API_KEY: z.string().min(1, 'GROQ_API_KEY wajib diisi'),
   AI_GATEWAY_API_KEY: z.string().optional(),
   FRONTEND_URL: z.string().url().default('http://localhost:5173'),
+  GOOGLE_CLIENT_ID: z.string().min(1, 'GOOGLE_CLIENT_ID wajib diisi'),
+  GOOGLE_CLIENT_SECRET: z.string().min(1, 'GOOGLE_CLIENT_SECRET wajib diisi'),
 });
 
 const parsed = envSchema.safeParse(process.env);

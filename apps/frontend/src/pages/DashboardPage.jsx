@@ -76,9 +76,7 @@ export default function DashboardPage() {
             onClick={async () => {
               await signOut();
               toast.success('Berhasil keluar akun', { icon: '👋' });
-              setTimeout(() => {
-                window.location.href = '/';
-              }, 1000);
+              navigate('/login');
             }}
             title="Keluar"
           >

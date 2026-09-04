@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
+import { toNodeHandler } from 'better-auth/node';
 import { env } from './config/env.js';
+import { auth } from './config/auth.js';
 import routes from './routes/index.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 
@@ -15,6 +17,9 @@ app.use(cors({
   origin: env.FRONTEND_URL,
   credentials: true,
 }));
+
+// Better Auth — mount SEBELUM body parser karena Better Auth handle sendiri
+app.all('/api/auth/*', toNodeHandler(auth));
 
 // Parse JSON body
 app.use(express.json({ limit: '10mb' }));

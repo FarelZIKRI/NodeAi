@@ -51,6 +51,25 @@ export default function CanvasPage() {
   const [edgePrompt, setEdgePrompt] = useState({ isOpen: false, label: '', edgeId: null, params: null });
   const [exportModal, setExportModal] = useState({ isOpen: false, format: 'png', transparent: false });
 
+  // Deteksi mobile (lebar layar <= 768px)
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
+  // Helper toggle sidebar — di mobile, buka satu otomatis tutup yang lain
+  const openAI = useCallback((value = true) => {
+    setShowAI(value);
+    if (value && isMobile) setShowShapes(false);
+  }, [isMobile]);
+
+  const openShapes = useCallback((value = true) => {
+    setShowShapes(value);
+    if (value && isMobile) setShowAI(false);
+  }, [isMobile]);
+
   const saveTimeoutRef = useRef(null);
   const reactFlowWrapperRef = useRef(null);
   const reactFlowInstanceRef = useRef(null);
@@ -91,11 +110,11 @@ export default function CanvasPage() {
         },
         onExpand: () => {
           setExpandTarget({ id: node.id, label: node.data.label, description: node.data.description });
-          setShowAI(true);
+          openAI(true);
         },
       },
     }));
-  }, [setNodes, setEdges, takeSnapshot]);
+  }, [setNodes, setEdges, takeSnapshot, openAI]);
 
   const handleUndo = useCallback(() => {
     setPast((p) => {
@@ -285,7 +304,7 @@ export default function CanvasPage() {
         },
         onExpand: () => {
           setExpandTarget({ id, label, description: '' });
-          setShowAI(true);
+          openAI(true);
         },
       },
     };
@@ -335,7 +354,7 @@ export default function CanvasPage() {
         },
         onExpand: () => {
           setExpandTarget({ id, label: shape.label, description: shape.description || '' });
-          setShowAI(true);
+          openAI(true);
         },
       },
     };
@@ -359,29 +378,40 @@ export default function CanvasPage() {
     if (!aiNodes || aiNodes.length === 0) return;
 
     takeSnapshot();
+
+    // Buat peta ID lama → ID baru untuk menghindari duplikat
+    const idMap = {};
+    aiNodes.forEach(n => {
+      idMap[n.id] = generateId();
+    });
+
     const newNodes = aiNodes.map(n => ({
       ...n,
+      id: idMap[n.id],
       type: 'roadmapNode',
       data: {
         ...n.data,
         onUpdate: (updates) => {
           setNodes(nds => nds.map(nd =>
-            nd.id === n.id ? { ...nd, data: { ...nd.data, ...updates } } : nd
+            nd.id === idMap[n.id] ? { ...nd, data: { ...nd.data, ...updates } } : nd
           ));
         },
         onDelete: () => {
-          setNodes(nds => nds.filter(nd => nd.id !== n.id));
-          setEdges(eds => eds.filter(e => e.source !== n.id && e.target !== n.id));
+          setNodes(nds => nds.filter(nd => nd.id !== idMap[n.id]));
+          setEdges(eds => eds.filter(e => e.source !== idMap[n.id] && e.target !== idMap[n.id]));
         },
         onExpand: () => {
-          setExpandTarget({ id: n.id, label: n.data.label, description: n.data.description });
-          setShowAI(true);
+          setExpandTarget({ id: idMap[n.id], label: n.data.label, description: n.data.description });
+          openAI(true);
         },
       },
     }));
 
-    const newEdges = (aiEdges || []).map(e => ({
+    const newEdges = (aiEdges || []).map((e, i) => ({
       ...e,
+      id: generateId(),        // ID edge juga di-regenerate agar unik
+      source: idMap[e.source] || e.source,
+      target: idMap[e.target] || e.target,
       type: currentEdgeType,
       animated: true,
       selectable: true,
@@ -553,7 +583,7 @@ export default function CanvasPage() {
           <div className="dropdown-row-2" style={{ display: 'flex', gap: '8px', width: '100%' }}>
             <button
               className={`btn btn-sm ${showShapes ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => setShowShapes(!showShapes)}
+              onClick={() => openShapes(!showShapes)}
               style={{ flex: 1, justifyContent: 'center', padding: '8px 12px' }}
             >
               <Shapes size={14} style={{ marginRight: 6 }} /> Bentuk
@@ -561,7 +591,7 @@ export default function CanvasPage() {
 
             <button
               className={`btn btn-sm ${showAI ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => setShowAI(!showAI)}
+              onClick={() => openAI(!showAI)}
               style={{ flex: 1, justifyContent: 'center', padding: '8px 12px' }}
             >
               <Bot size={14} style={{ marginRight: 6 }} /> AI Chat
@@ -596,7 +626,7 @@ export default function CanvasPage() {
           minWidth={240}
           maxWidth={450}
           isOpen={showShapes}
-          onToggle={() => setShowShapes(!showShapes)}
+          onToggle={() => openShapes(!showShapes)}
           title="Bentuk & Garis"
           icon={<Shapes size={14} />}
         >
@@ -702,10 +732,10 @@ export default function CanvasPage() {
                   Mulai dengan menambah bentuk dari panel kiri, atau minta AI untuk generate roadmap.
                 </p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <button className="btn btn-secondary btn-sm" onClick={() => setShowShapes(true)}>
+                  <button className="btn btn-secondary btn-sm" onClick={() => openShapes(true)}>
                     <Shapes size={14} /> Buka Bentuk
                   </button>
-                  <button className="btn btn-primary btn-sm" onClick={() => setShowAI(true)}>
+                  <button className="btn btn-primary btn-sm" onClick={() => openAI(true)}>
                     <Sparkles size={14} /> Chat dengan AI
                   </button>
                 </div>
@@ -721,7 +751,7 @@ export default function CanvasPage() {
           minWidth={300}
           maxWidth={600}
           isOpen={showAI}
-          onToggle={() => setShowAI(!showAI)}
+          onToggle={() => openAI(!showAI)}
           title="AI Assistant"
           icon={<Bot size={14} />}
         >

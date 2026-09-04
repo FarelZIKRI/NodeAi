@@ -14,7 +14,7 @@ const groq = createGroq({
   apiKey: env.GROQ_API_KEY, // Menggunakan key Groq
 });
 
-const model = groq('llama-3.3-70b-versatile');
+const model = groq('openai/gpt-oss-20b');
 
 // Schema Zod untuk output terstruktur (nodes & edges)
 const diagramSchema = z.object({
@@ -166,6 +166,8 @@ Gunakan format persis seperti ini:
 - Berikan "label" pada array list "edges" (contoh: "Lanjut", "Ya", "Tidak", atau kosong "" jika tidak perlu) untuk menamai garis penghubungnya agar pengguna mengerti logikanya.
 - Sumbu Y setiap node HARUS bertambah. Jika bercabang, buat X ke sisi kiri/kanan.
 - HARUS menggunakan tag kode markdown \`\`\`json
+- Buat maksimal 10 node agar output tidak terlalu panjang.
+- Pastikan JSON SELALU lengkap dan ditutup dengan benar sebelum menutup blok \`\`\`.
 - Ingat: jangan memanggil functions, hasilkan teks langsung ya!`;
 
     // Filter dan map chat history untuk memastikan tidak ada pesan kosong/undfined
@@ -185,6 +187,7 @@ Gunakan format persis seperti ini:
       model,
       system: systemPrompt,
       messages,
+      maxTokens: 4096,
     });
 
     let reply = text || '';
@@ -193,24 +196,54 @@ Gunakan format persis seperti ini:
     let edges = [];
 
     // Ekstrak JSON dari dalam markdown response (regex)
+    // Coba ambil blok ```json ... ``` terlebih dahulu
     const jsonMatch = reply.match(/```json\s*([\s\S]*?)\s*```/);
-    if (jsonMatch && jsonMatch[1]) {
+    // Jika tidak ada closing ```, coba ambil dari ```json sampai akhir string (terpotong)
+    const jsonMatchPartial = !jsonMatch && reply.match(/```json\s*([\s\S]+)$/);
+    const rawJson = jsonMatch ? jsonMatch[1] : (jsonMatchPartial ? jsonMatchPartial[1] : null);
+
+    if (rawJson) {
       try {
-        const parsed = JSON.parse(jsonMatch[1]);
+        const parsed = JSON.parse(rawJson);
         if (parsed.nodes && parsed.edges) {
           hasDiagram = true;
           nodes = parsed.nodes || [];
           edges = parsed.edges || [];
-          
+
           // Hapus kode JSON dari string agar tidak tampil ke pengguna di chat bubble
-          reply = reply.replace(/```json\s*[\s\S]*?\s*```/, '').trim();
-          
+          reply = reply.replace(/```json[\s\S]*$/, '').trim();
+
           if (!reply) {
             reply = "Diagram berhasil saya rancang! Silakan klik tombol **Terapkan ke Canvas** di bawah ini.";
           }
         }
       } catch (err) {
-        console.error('Gagal mem-parsing JSON dari AI:', err);
+        // JSON terpotong — coba perbaiki dengan menutup struktur yang belum selesai
+        try {
+          let fixedJson = rawJson.trim();
+          // Tutup array edges jika belum selesai
+          if (!fixedJson.endsWith(']') && !fixedJson.endsWith('}')) {
+            // Hapus entry terakhir yang tidak lengkap (kemungkinan terpotong di tengah)
+            const lastCompleteEdge = fixedJson.lastIndexOf('},');
+            if (lastCompleteEdge !== -1) {
+              fixedJson = fixedJson.substring(0, lastCompleteEdge + 1);
+            }
+            // Tutup struktur JSON
+            fixedJson += ']}';
+          }
+          const parsed = JSON.parse(fixedJson);
+          if (parsed.nodes && parsed.edges) {
+            hasDiagram = true;
+            nodes = parsed.nodes || [];
+            edges = parsed.edges || [];
+            reply = reply.replace(/```json[\s\S]*$/, '').trim();
+            if (!reply) {
+              reply = "Diagram berhasil saya rancang! Silakan klik tombol **Terapkan ke Canvas** di bawah ini.";
+            }
+          }
+        } catch (fixErr) {
+          console.error('Gagal mem-parsing JSON dari AI (bahkan setelah perbaikan):', fixErr);
+        }
       }
     }
 

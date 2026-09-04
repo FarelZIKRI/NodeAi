@@ -22,7 +22,9 @@ async function apiFetch(url, options = {}) {
   const data = await res.json().catch(() => null);
 
   if (!res.ok) {
-    throw new Error(data?.error || `Request gagal (${res.status})`);
+    const error = new Error(data?.error || `Request gagal (${res.status})`);
+    error.status = res.status;
+    throw error;
   }
 
   return data;
@@ -40,6 +42,10 @@ export function ProjectProvider({ children }) {
       const data = await apiFetch(API_BASE);
       setProjects(data || []);
     } catch (err) {
+      if (err.status === 401) {
+        // Jika 401 (sesi habis / belum terautentikasi), abaikan toast error
+        return;
+      }
       console.error('Gagal memuat proyek:', err);
       toast.error('Gagal memuat proyek');
     } finally {

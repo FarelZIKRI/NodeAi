@@ -966,6 +966,7 @@ a.btn-primary:hover {
   gap: 16px;
   color: var(--text-muted);
   font-size: 0.8rem;
+  margin: 4px 0;
 }
 
 .auth-divider::before,
@@ -974,6 +975,39 @@ a.btn-primary:hover {
   flex: 1;
   height: 1px;
   background: var(--border-subtle);
+}
+
+/* Tombol Google OAuth */
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 20px;
+  background: #ffffff;
+  border: 1.5px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-family);
+  margin-bottom: 4px;
+}
+
+.btn-google:hover {
+  border-color: #4285F4;
+  background: #f8faff;
+  box-shadow: 0 2px 12px rgba(66, 133, 244, 0.15);
+  transform: translateY(-1px);
+}
+
+.btn-google:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ==================

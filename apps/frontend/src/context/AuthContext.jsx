@@ -33,6 +33,20 @@ export function AuthProvider({ children }) {
     }
   };
 
+const getErrorMessage = (data) => {
+  if (!data) return 'Terjadi kesalahan pada server';
+  if (data.code === 'USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL') {
+    return 'Email ini sudah terdaftar. Silakan gunakan email lain atau langsung masuk.';
+  }
+  if (data.code === 'INVALID_EMAIL_OR_PASSWORD' || data.code === 'INVALID_EMAIL' || data.code === 'INVALID_PASSWORD') {
+    return 'Email atau password salah';
+  }
+  if (data.code === 'PASSWORD_TOO_SHORT') {
+    return 'Password terlalu pendek (minimal 8 karakter)';
+  }
+  return data.message || 'Gagal memproses permintaan';
+};
+
   const signUp = async (email, password, name) => {
     try {
       const res = await fetch(`${API_BASE}/sign-up/email`, {
@@ -45,7 +59,7 @@ export function AuthProvider({ children }) {
       const data = await res.json();
 
       if (!res.ok) {
-        return { data: null, error: { message: data.message || 'Gagal mendaftar' } };
+        return { data: null, error: { message: getErrorMessage(data) } };
       }
 
       setUser(data.user);
@@ -67,7 +81,7 @@ export function AuthProvider({ children }) {
       const data = await res.json();
 
       if (!res.ok) {
-        return { data: null, error: { message: data.message || 'Email atau password salah' } };
+        return { data: null, error: { message: getErrorMessage(data) } };
       }
 
       setUser(data.user);
@@ -99,8 +113,32 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+      const callbackURL = `${window.location.origin}/dashboard`;
+
+      const res = await fetch(`${backendUrl}/api/auth/sign-in/social`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ provider: 'google', callbackURL }),
+      });
+
+      const data = await res.json();
+
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        console.error('Tidak ada URL redirect dari server:', data);
+      }
+    } catch (err) {
+      console.error('Gagal login dengan Google:', err);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, signInWithGoogle }}>
       {children}
     </AuthContext.Provider>
   );
