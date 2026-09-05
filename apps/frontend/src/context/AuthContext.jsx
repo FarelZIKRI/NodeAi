@@ -117,21 +117,15 @@ const getErrorMessage = (data) => {
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
       const callbackURL = `${window.location.origin}/dashboard`;
+      const endpoint = `${backendUrl}/api/auth/sign-in/social`;
 
-      // Better Auth v1.7+ menggunakan query params untuk social sign-in
-      const url = new URL(`${backendUrl}/api/auth/sign-in/social`);
-      url.searchParams.set('provider', 'google');
-      url.searchParams.set('callbackURL', callbackURL);
-
-      // Coba POST dengan query params dulu
-      const res = await fetch(url.toString(), {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ provider: 'google', callbackURL }),
       });
 
-      // Kalau response adalah redirect langsung (3xx), ikuti redirect
       if (res.redirected) {
         window.location.href = res.url;
         return;
@@ -141,8 +135,6 @@ const getErrorMessage = (data) => {
 
       if (data?.url) {
         window.location.href = data.url;
-      } else if (res.ok || data?.redirect) {
-        window.location.href = callbackURL;
       } else {
         console.error('Tidak ada URL redirect dari server:', data);
       }
