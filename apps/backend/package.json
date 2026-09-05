@@ -16,7 +16,7 @@
     "@ai-sdk/groq": "^3.0.24",
     "@ai-sdk/openai": "^3.0.30",
     "ai": "^6.0.94",
-    "better-auth": "^1.2.9",
+    "better-auth": "1.4.18",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.45.2",
