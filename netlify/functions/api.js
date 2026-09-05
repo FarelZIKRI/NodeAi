@@ -1,16 +1,30 @@
-// CJS wrapper — dynamic import() agar ESM modules tetap bisa di-load
-// serverless-http ada di root node_modules (di-hoist oleh npm workspaces)
-// app.js ada di apps/backend/src/app.js (ESM)
 const path = require('path');
 
 exports.handler = async (event, context) => {
   try {
-    const appPath = path.resolve(__dirname, '../../apps/backend/src/app.js');
+    // Log versi better-auth dan social providers yang terdaftar
+    if (event.path && event.path.includes('sign-in/social')) {
+      try {
+        const baPkg = require(path.resolve(__dirname, '../../node_modules/better-auth/package.json'));
+        console.log('[DEBUG] better-auth version:', baPkg.version);
+      } catch(e) {
+        console.log('[DEBUG] cannot read ba version:', e.message);
+      }
 
-    // serverless-http di-hoist ke root node_modules oleh npm workspaces
+      // Import auth config dan log social providers yang terdaftar
+      try {
+        const { auth } = await import('../../apps/backend/src/config/auth.js');
+        const providers = auth.options?.socialProviders || {};
+        console.log('[DEBUG] registered socialProviders keys:', Object.keys(providers));
+        console.log('[DEBUG] google clientId exists:', !!providers.google?.clientId);
+      } catch(e) {
+        console.log('[DEBUG] cannot read auth config:', e.message);
+      }
+    }
+
+    const appPath = path.resolve(__dirname, '../../apps/backend/src/app.js');
     const { default: serverless } = await import('serverless-http');
     const { default: app } = await import(appPath);
-
     const handler = serverless(app);
     return handler(event, context);
   } catch (err) {
