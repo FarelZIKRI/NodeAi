@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
-    "build": "npm install --workspace=apps/frontend && cd apps/frontend && node_modules/.bin/vite build",
+    "build": "cd apps/frontend && npm install && npm run build",
     "lint": "turbo run lint"
   },
   "devDependencies": {
