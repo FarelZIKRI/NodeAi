@@ -19,7 +19,7 @@
     "better-auth": "^1.2.9",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.44.0",
+    "drizzle-orm": "^0.45.2",
     "express": "^4.21.2",
     "postgres": "^3.4.5",
     "serverless-http": "^4.0.0",
