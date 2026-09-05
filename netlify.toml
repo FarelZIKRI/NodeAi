@@ -1,9 +1,20 @@
 [build]
-  command = "cd apps/frontend && npm install --include=dev && npm run build"
+  command = "cd apps/frontend && npm install --include=dev && npm run build && cd ../.. && npm install --prefix apps/backend --omit=dev"
   publish = "apps/frontend/dist"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "20"
+
+[functions]
+  node_bundler = "nft"
+
+# Redirect semua /api/* ke Netlify Function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
 
 # SPA fallback untuk React Router
 [[redirects]]

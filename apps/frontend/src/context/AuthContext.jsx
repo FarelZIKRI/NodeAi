@@ -115,7 +115,9 @@ const getErrorMessage = (data) => {
 
   const signInWithGoogle = async () => {
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+      // Dev: pakai VITE_BACKEND_URL (localhost:3001)
+      // Production: sama domain (Netlify Functions)
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
       const callbackURL = `${window.location.origin}/dashboard`;
 
       const res = await fetch(`${backendUrl}/api/auth/sign-in/social`, {
