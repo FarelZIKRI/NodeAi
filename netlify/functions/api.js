@@ -2,23 +2,29 @@ const path = require('path');
 
 exports.handler = async (event, context) => {
   try {
-    // Log versi better-auth dan social providers yang terdaftar
     if (event.path && event.path.includes('sign-in/social')) {
-      try {
-        const baPkg = require(path.resolve(__dirname, '../../node_modules/better-auth/package.json'));
-        console.log('[DEBUG] better-auth version:', baPkg.version);
-      } catch(e) {
-        console.log('[DEBUG] cannot read ba version:', e.message);
+      // Cek SEMUA versi better-auth yang ada di node_modules
+      const checkPaths = [
+        '/var/task/node_modules/better-auth/package.json',
+        '/var/task/apps/backend/node_modules/better-auth/package.json',
+        '/var/task/node_modules/better-auth/node_modules/@better-auth/core/package.json',
+      ];
+      for (const p of checkPaths) {
+        try {
+          const pkg = require(p);
+          console.log(`[DEBUG] ${p}: ${pkg.version}`);
+        } catch(e) {
+          console.log(`[DEBUG] ${p}: NOT FOUND`);
+        }
       }
 
-      // Import auth config dan log social providers yang terdaftar
+      // Cek SocialProviderListEnum yang digunakan saat runtime
       try {
-        const { auth } = await import('../../apps/backend/src/config/auth.js');
-        const providers = auth.options?.socialProviders || {};
-        console.log('[DEBUG] registered socialProviders keys:', Object.keys(providers));
-        console.log('[DEBUG] google clientId exists:', !!providers.google?.clientId);
+        const { SocialProviderListEnum } = await import('/var/task/node_modules/better-auth/node_modules/@better-auth/core/dist/social-providers/index.mjs');
+        const result = SocialProviderListEnum.safeParse('google');
+        console.log('[DEBUG] SocialProviderListEnum.safeParse("google"):', JSON.stringify(result));
       } catch(e) {
-        console.log('[DEBUG] cannot read auth config:', e.message);
+        console.log('[DEBUG] safeParse check error:', e.message);
       }
     }
 
