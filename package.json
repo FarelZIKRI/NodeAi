@@ -13,5 +13,10 @@
   },
   "devDependencies": {
     "turbo": "^2.5.0"
+  },
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "^0.25.0"
+    }
   }
 }
