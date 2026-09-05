@@ -1,5 +1,5 @@
 [build]
-  command = "cd apps/backend && npm install --omit=dev && cd ../frontend && npm install --include=dev && npm run build"
+  command = "npm install --ignore-scripts && cd apps/frontend && npm install --include=dev && npm run build"
   publish = "apps/frontend/dist"
   functions = "netlify/functions"
 
@@ -8,7 +8,7 @@
 
 [functions]
   node_bundler = "none"
-  included_files = ["apps/backend/**"]
+  included_files = ["apps/backend/**", "node_modules/**"]
 
 # Redirect semua /api/* ke Netlify Function
 [[redirects]]
