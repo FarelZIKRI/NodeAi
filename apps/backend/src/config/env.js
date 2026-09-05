@@ -28,9 +28,11 @@ const envSchema = z.object({
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
-  console.error('Variabel environment tidak valid:');
-  console.error(parsed.error.flatten().fieldErrors);
-  process.exit(1);
+  const errors = parsed.error.flatten().fieldErrors;
+  console.error('Variabel environment tidak valid:', errors);
+  // Throw error instead of process.exit() agar serverless function bisa
+  // mengembalikan error response daripada crash total
+  throw new Error(`Missing env vars: ${Object.keys(errors).join(', ')}`);
 }
 
 export const env = parsed.data;

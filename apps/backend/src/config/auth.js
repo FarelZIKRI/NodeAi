@@ -3,6 +3,8 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from './db.js';
 import { env } from './env.js';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 /**
  * Inisialisasi Better Auth dengan Drizzle adapter.
  * Menggunakan email + password dan Google OAuth sebagai metode autentikasi.
@@ -28,18 +30,11 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 7,   // 7 hari
     updateAge: 60 * 60 * 24,        // Refresh setiap 1 hari
-    cookieCache: {
-      enabled: true,
-      maxAge: 60 * 5,               // cache 5 menit
-    },
   },
   advanced: {
-    crossSubDomainCookies: {
-      enabled: false,
-    },
     defaultCookieAttributes: {
-      sameSite: 'lax',
-      secure: false,                // false untuk localhost (http)
+      sameSite: isProduction ? 'none' : 'lax',
+      secure: isProduction,         // true di production (HTTPS), false di localhost
       httpOnly: true,
     },
   },
