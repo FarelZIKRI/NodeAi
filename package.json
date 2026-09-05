@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
-    "build": "npm install --workspace=apps/frontend && npm run build --workspace=apps/frontend",
+    "build": "npm install --workspace=apps/frontend && npx --prefix apps/frontend vite build",
     "lint": "turbo run lint"
   },
   "devDependencies": {
