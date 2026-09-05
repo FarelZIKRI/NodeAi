@@ -1,30 +1,23 @@
-// Wrapper CJS yang load ESM app via dynamic import
+// CJS wrapper — pakai dynamic import() untuk load ESM modules
+// node_bundler="none": file tidak di-bundle, ESM tetap ESM
+const path = require('path');
+
 exports.handler = async (event, context) => {
   try {
-    // Debug: cek versi better-auth dan credentials
-    if (event.path && event.path.includes('sign-in/social')) {
-      try {
-        const { createRequire } = require('module');
-        const req = createRequire(import.meta ? import.meta.url : __filename);
-        // Cek versi better-auth yang ter-resolve
-        const baPkg = require('/var/task/node_modules/better-auth/package.json');
-        console.log('[DEBUG] better-auth version at runtime:', baPkg.version);
-      } catch(e) {
-        console.log('[DEBUG] version check error:', e.message);
-      }
-      console.log('[DEBUG] GOOGLE_CLIENT_ID exists:', !!process.env.GOOGLE_CLIENT_ID);
-      console.log('[DEBUG] GOOGLE_CLIENT_SECRET exists:', !!process.env.GOOGLE_CLIENT_SECRET);
-      console.log('[DEBUG] BETTER_AUTH_URL:', process.env.BETTER_AUTH_URL);
-      console.log('[DEBUG] NODE_ENV:', process.env.NODE_ENV);
-      console.log('[DEBUG] body:', event.body);
-    }
-
-    const { default: serverless } = await import('serverless-http');
-    const { default: app } = await import('../../apps/backend/src/app.js');
+    // Resolve path absolut ke backend app
+    const backendPath = path.resolve(__dirname, '../../apps/backend');
+    const appPath = path.join(backendPath, 'src/app.js');
+    
+    // Import serverless-http dari node_modules backend
+    const serverlessPath = path.join(backendPath, 'node_modules/serverless-http/lib/index.js');
+    
+    const { default: serverless } = await import(serverlessPath);
+    const { default: app } = await import(appPath);
+    
     const handler = serverless(app);
     return handler(event, context);
   } catch (err) {
-    console.error('[Netlify Function Error]', err.message, err.stack?.split('\n').slice(0,3).join(' | '));
+    console.error('[Function Error]', err.message, err.stack?.split('\n').slice(0,3).join(' | '));
     return {
       statusCode: 500,
       body: JSON.stringify({ error: err.message }),

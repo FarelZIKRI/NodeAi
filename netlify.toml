@@ -1,5 +1,5 @@
 [build]
-  command = "npm install && cd apps/frontend && npm run build"
+  command = "cd apps/backend && npm install --omit=dev && cd ../frontend && npm install --include=dev && npm run build"
   publish = "apps/frontend/dist"
   functions = "netlify/functions"
 
@@ -7,7 +7,8 @@
   NODE_VERSION = "20"
 
 [functions]
-  node_bundler = "nft"
+  node_bundler = "none"
+  included_files = ["apps/backend/**"]
 
 # Redirect semua /api/* ke Netlify Function
 [[redirects]]
